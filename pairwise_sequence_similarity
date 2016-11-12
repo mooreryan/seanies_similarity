@@ -51,7 +51,7 @@ end
 
 
 abort_unless ARGV.count == 1 || ARGV.count == 2,
-             "USAGE: ruby #{__FILE__} aligned_seqs.fa " +
+             "USAGE: #{__FILE__} aligned_seqs.fa " +
              "<aln_length (default: 50,000)>"
 
 fname = ARGV[0]

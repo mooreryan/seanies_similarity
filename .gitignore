@@ -1,0 +1,4 @@
+*.o
+lib
+Makefile
+test_files/*txt
