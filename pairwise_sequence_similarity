@@ -1,0 +1,97 @@
+#!/usr/bin/env ruby
+
+require "parse_fasta"
+require "abort_if"
+require_relative "lib/pss"
+
+include AbortIf
+
+def similarity s1, s2
+  s1_length = s1.length
+
+  matches = Pss::num_matches s1, s2, s1_length
+
+  total = s1_length.to_f
+
+  [matches, total, matches / total * 100]
+end
+
+def localize_start_idx s1, s2
+  begin
+    [s1.index(/[^-.]/), s2.index(/[^-.]/)].max
+  rescue ArgumentError
+    abort_if true,
+             "One of #{s1} or #{s2} was probably all gaps"
+  end
+end
+
+def localize_stop_idx s1, s2
+  -([s1.reverse.index(/[^-.]/), s2.reverse.index(/[^-.]/)].max + 1)
+end
+
+####
+
+def degap_seqs s1, s2
+  non_gap_posns = Pss::shared_non_gap_posns s1, s2
+
+  [Pss::degap_seq(non_gap_posns, s1),
+   Pss::degap_seq(non_gap_posns, s2),]
+end
+
+def localize_seqs s1, s2
+  start_idx = localize_start_idx s1, s2
+  stop_idx = localize_stop_idx s1, s2
+
+  [s1[start_idx .. stop_idx], s2[start_idx .. stop_idx]]
+end
+
+def puts_each *coll
+  coll.each { |elem| puts elem }
+end
+
+
+abort_unless ARGV.count == 1 || ARGV.count == 2,
+             "USAGE: ruby #{__FILE__} aligned_seqs.fa " +
+             "<aln_length (default: 50,000)>"
+
+fname = ARGV[0]
+if ARGV[1]
+  LENGTH = ARGV[1].to_i
+else
+  LENGTH = 50_000
+end
+
+recs = []
+ParseFasta::SeqFile.open(fname).each_record do |rec|
+  abort_unless rec.seq.length == LENGTH,
+               "Length is bad for #{rec.header}. Should be " +
+               "#{LENGTH}, was #{rec.seq.length}"
+
+  rec.seq.tr! ".", "-"
+  recs << rec
+end
+
+AbortIf.logger.info {
+  "Processing #{recs.combination(2).count} combinations " +
+    "for #{recs.count} sequences"
+}
+
+File.open(fname + ".similarity.txt", "w") do |f|
+  f.puts %w[seq1 seq2 matches total_compared percent].join "\t"
+  recs.combination(2).each_with_index do |(r1, r2), idx|
+    STDERR.printf("Processing %s\r", idx) if (idx % 1000).zero?
+
+    h1 = r1.header
+    h2 = r2.header
+
+    s1 = r1.seq
+    s2 = r2.seq
+
+    s1_degap, s2_degap = degap_seqs s1, s2
+
+    s1_localized, s2_localized = localize_seqs s1_degap, s2_degap
+
+    f.puts [h1, h2, similarity(s1_localized, s2_localized)].join "\t"
+  end
+  AbortIf.logger.info { "Done!" }
+end
