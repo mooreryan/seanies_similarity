@@ -25,6 +25,14 @@ compiling pss.c
 linking shared-object lib/pss.bundle
 ```
 
+Currently, the  `pairwise_sequence_similarity` must remain in this directory to work. But you can make a symlink to a location on your path if you want.
+
+```bash
+$ ln -s `pwd`/pairwise_sequence_similarity ~/bin/pairwise_sequence_similarity
+```
+
+Since, `~/bin` is on my path, I can use this spiffy program from wherever!
+
 ## Run tests!
 
 ```bash
@@ -44,7 +52,7 @@ USAGE: ./pairwise_sequence_similarity aligned_seqs.fa <aln_length (default: 50,0
 A test file...
 
 ```bash
-cat test_files/test.fa
+$ cat test_files/test.fa
 >s1
 .....T-GG-A..
 >s2
@@ -58,7 +66,7 @@ cat test_files/test.fa
 Run the program...
 
 ```bash
-./pairwise_sequence_similarity test_files/test.fa 13
+$ ./pairwise_sequence_similarity test_files/test.fa 13
 I, [2016-11-11T23:19:12.498380 #73994]  INFO -- : Processing 6 combinations for 4 sequences
 I, [2016-11-11T23:19:12.498890 #73994]  INFO -- : Done!
 ```
@@ -66,7 +74,7 @@ I, [2016-11-11T23:19:12.498890 #73994]  INFO -- : Done!
 And the resulting file...
 
 ```bash
-cat test_files/test.fa.similarity.txt
+$ cat test_files/test.fa.similarity.txt
 seq1	seq2	matches	total_compared	percent
 s1	s2	3	4.0	75.0
 s1	s3	1	4.0	25.0
@@ -83,7 +91,7 @@ Some of these are `NaN` because some sequences don't overlap each other at any b
 You hate the program? No problem!
 
 ```bash
-./uninstall.sh
+$ ./uninstall.sh
 ```
 
 Just you try and use it now! ^__^
