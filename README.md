@@ -56,9 +56,9 @@ $ cat test_files/test.fa
 >s1
 .....T-GG-A..
 >s2
------T-GG--T-
+-----t-gg--t-
 >s3
---AAAT-T---T-
+--AAAU-U---U-
 >s4
 ---AA--------
 ```
@@ -84,7 +84,9 @@ s2	s4	0	0.0	NaN
 s3	s4	2	2.0	100.0
 ```
 
-Some of these are `NaN` because some sequences don't overlap each other at any base.
+- `U` and `T` are treated as being equal. 
+- Case insensitive
+- Some of these are `NaN` because some sequences don't overlap each other at any base.
 
 ## Uninstall it!
 

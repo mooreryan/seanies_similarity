@@ -67,7 +67,8 @@ ParseFasta::SeqFile.open(fname).each_record do |rec|
                "Length is bad for #{rec.header}. Should be " +
                "#{LENGTH}, was #{rec.seq.length}"
 
-  rec.seq.tr! ".", "-"
+  rec.seq.upcase!
+  rec.seq.tr! ".Uu", "-Tt"
   recs << rec
 end
 
