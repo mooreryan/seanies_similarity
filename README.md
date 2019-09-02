@@ -1,6 +1,6 @@
 # Seanie's Similarity
 
-Seanie wants what Seanie wants. And today, Seanie wants his special pairwise sequence similarity metric....
+Seanie's special pairwise sequence similarity metric....It's good for comparing sequences that have been aligned with SILVA's ACT.
 
 ## Install it!
 
@@ -40,6 +40,8 @@ $ ./test.sh
 Test 1: Success!
 Test 2: Success!
 ```
+
+If the tests fail, and it's been a while since you installed the program, it's possible that it was compiled under a different version of Ruby.  If so, just uninstall and reinstall it!
 
 ## Use it!
 
