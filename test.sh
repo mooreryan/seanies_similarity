@@ -1,5 +1,7 @@
 #!/bin/bash
-./pairwise_sequence_similarity test_files/test.fa 13 2> /dev/null
+
+# Test 1
+./pairwise_sequence_similarity test_files/test.fa 13
 diff test_files/test.fa.similarity.txt.expected test_files/test.fa.similarity.txt
 
 if [ $? -eq 0 ]
@@ -12,6 +14,7 @@ rm test_files/test.fa.similarity.txt
 
 
 
+# Test 2
 ./pairwise_sequence_similarity test_files/test_all_gaps.fa 13 2> /dev/null
 
 if [ $? -eq 1 ]
